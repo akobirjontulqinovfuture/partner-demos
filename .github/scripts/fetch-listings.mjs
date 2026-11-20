@@ -39,7 +39,7 @@ const seen = new Map(); let before = '';
 for (let i = 0; i < 10; i++) { const h = await page(before ? `?before=${before}` : ''); const ps = parse(h); if (!ps.length) break; ps.forEach(p => seen.set(p.id, p)); before = Math.min(...ps.map(p => p.id)); await sleep(700); }
 for (const q of ['iPad', 'iwatch', 'Playstation', 'Lenovo', 'HP', 'Asus']) { parse(await page(`?q=${encodeURIComponent(q)}`)).forEach(p => seen.set(p.id, p)); await sleep(700); }
 const items = [...seen.values()].map(toItem).filter(Boolean).sort((a, b) => b.id - a.id);
-const capped = []; const per = {}; for (const it of items) { per[it.cat] = (per[it.cat] || 0) + 1; if (per[it.cat] <= 16) capped.push(it); }
+const capped = []; const per = {}; for (const it of items) { per[it.cat] = (per[it.cat] || 0) + 1; if (per[it.cat] <= 40) capped.push(it); }
 const out = process.argv[2] || 'listings.json';
 let prev = null; try { prev = JSON.parse(fs.readFileSync(out, 'utf8')); } catch (e) {}
 const same = prev && JSON.stringify(prev.items.map(i => [i.id, i.price, i.img && i.img.slice(0, 60)])) === JSON.stringify(capped.map(i => [i.id, i.price, i.img && i.img.slice(0, 60)]));
